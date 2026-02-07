@@ -1,4 +1,6 @@
-import { RumorController } from '$lib/controllers/controller.js';
-export function load() {
-    return { rumors: RumorController.getSortedRumors() };
+import { RumorModel } from '$lib/models/model.js';
+
+export async function load() {
+    const rumors = RumorModel.getSortedRumors(); 
+    return { rumors };
 }

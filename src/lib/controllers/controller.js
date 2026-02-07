@@ -1,19 +1,22 @@
-import { RumorModel } from '../models/model.js';
+import { RumorModel } from '$lib/models/model.js';
 
 export const RumorController = {
-    getSortedRumors: () => {
-        return RumorModel.getAll().sort((a, b) => b.reports.length - a.reports.length);
-    },
-    
     getRumorDetails: (id) => {
         return RumorModel.getById(id);
     },
 
     processReport: (formData) => {
+        const actionType = formData.get('actionType');
         const rumorId = formData.get('rumorId');
         const userId = formData.get('userId');
+
+        if (actionType === 'verify') {
+            const newStatus = formData.get('newStatus');
+            return RumorModel.verifyRumor(rumorId, userId, newStatus);
+        }
+
         const type = formData.get('type');
-        
-        return RumorModel.saveReport(rumorId, userId, type);
+        const note = formData.get('note');
+        return RumorModel.saveReport(rumorId, userId, type, note);
     }
 };

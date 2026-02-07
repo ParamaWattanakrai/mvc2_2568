@@ -15,9 +15,12 @@ CREATE TABLE Rumours (
 
 CREATE TABLE Reports (
     report_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    reporter_id TEXT,
-    rumour_id INTEGER,
-    report_date DATETIME,
-    report_type TEXT, -- Distorted / Incite / Fake
+    reporter_id TEXT NOT NULL,
+    rumour_id INTEGER NOT NULL,
+    report_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    report_type TEXT CHECK(report_type IN ('บิดเบือน', 'ปลุกปั่น', 'ข้อมูลเท็จ')),
+    reporter_note TEXT,
+    FOREIGN KEY (reporter_id) REFERENCES Users(user_id),
+    FOREIGN KEY (rumour_id) REFERENCES Rumours(rumour_id),
     UNIQUE(reporter_id, rumour_id)
 );
