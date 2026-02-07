@@ -1,6 +1,10 @@
 import { RumorModel } from '$lib/models/model.js';
 
 export const RumorController = {
+    getSortedRumors: () => {
+        return RumorModel.getSortedRumors();
+    },
+
     getRumorDetails: (id) => {
         return RumorModel.getById(id);
     },
