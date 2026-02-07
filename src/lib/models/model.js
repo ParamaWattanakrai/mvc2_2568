@@ -27,17 +27,26 @@ export const RumorModel = {
     getAll: () => db.rumours,
     getById: (id) => db.rumours.find(r => r.id === parseInt(id)),
     
+    isValidUser: (userId) => {
+        return db.users.some(u => u.id === userId);
+    },
+
     saveReport: (rumorId, reporterId, type) => {
         const rumor = db.rumours.find(r => r.id === parseInt(rumorId));
-        
-        if (rumor.status === 'Verified') return { error: "Already verified" };
+        if (!RumorModel.isValidUser(reporterId)) {
+            return { error: "Invalid User ID." };
+        }
+
+        if (rumor.status === 'Real' || rumor.status === 'Fake') {
+            return { error: "This rumor is already verified and locked." };
+        }
         
         const exists = rumor.reports.find(rep => rep.reporterId === reporterId);
-        if (exists) return { error: "You already reported this." };
+        if (exists) return { error: "You have already reported this rumor." };
 
         rumor.reports.push({ reporterId, type, date: new Date() });
 
-        if (rumor.reports.length >= 3) {
+        if (rumor.reports.length >= 5) {
             rumor.status = "Panic";
         }
         return { success: true };
